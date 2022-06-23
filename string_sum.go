@@ -2,6 +2,10 @@ package string_sum
 
 import (
 	"errors"
+	"fmt"
+	"regexp"
+	"strconv"
+	"strings"
 )
 
 //use these errors as appropriate, wrapping them with fmt.Errorf function
@@ -11,6 +15,46 @@ var (
 	// Use when the expression has number of operands not equal to two
 	errorNotTwoOperands = errors.New("expecting two operands, but received more or less")
 )
+
+func ReturnNumbersInString(input string) []string {
+	input = "3+5"
+	re := regexp.MustCompile(`-?\d[\d,]*\.?[\d{2}]*`)
+	numbers := re.FindAllString(input, -1)
+	return numbers
+}
+
+func SumOfNumbersInArray(array []int) int {
+	result := 0
+	for _, v := range array {
+		result += v
+	}
+	return result
+}
+
+func ConvertStringArrayToIntArray(param []string) []int {
+	testString := "3+5"
+	re := regexp.MustCompile(`-?\d[\d,]*\.?[\d{2}]*`)
+	numbers := re.FindAllString(testString, -1)
+	var arrayAsIntegers []int
+
+	for _, i := range numbers {
+		j, err := strconv.Atoi(i)
+		if err != nil {
+			panic(err)
+		}
+		arrayAsIntegers = append(arrayAsIntegers, j)
+	}
+
+	return arrayAsIntegers
+}
+
+func CalculateSumOfInts(array []int) int {
+	res := 0
+	for i := 0; i < len(array); i++ {
+		res += array[i]
+	}
+	return res
+}
 
 // Implement a function that computes the sum of two int numbers written as a string
 // For example, having an input string "3+5", it should return output string "8" and nil error
@@ -23,5 +67,19 @@ var (
 // Use the errors defined above as described, again wrapping into fmt.Errorf
 
 func StringSum(input string) (output string, err error) {
-	return "", nil
+	if len(input) == 0 {
+		return "", fmt.Errorf("input is empty: %w", errorEmptyInput)
+	}
+
+	input = strings.ReplaceAll(input, " ", "")
+
+	arrayOfStrings := ReturnNumbersInString(input)
+	arrayOfNumbers := ConvertStringArrayToIntArray(arrayOfStrings)
+
+	if len(arrayOfNumbers) > 2 {
+		return "", fmt.Errorf("too many operands %d: %w", len(arrayOfNumbers), errorNotTwoOperands)
+	}
+
+	sum := CalculateSumOfInts(arrayOfNumbers)
+	return string(rune(sum)), nil
 }
