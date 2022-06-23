@@ -17,7 +17,6 @@ var (
 )
 
 func ReturnNumbersInString(input string) []string {
-	input = "3+5"
 	re := regexp.MustCompile(`-?\d[\d,]*\.?[\d{2}]*`)
 	numbers := re.FindAllString(input, -1)
 	return numbers
@@ -32,12 +31,9 @@ func SumOfNumbersInArray(array []int) int {
 }
 
 func ConvertStringArrayToIntArray(param []string) []int {
-	testString := "3+5"
-	re := regexp.MustCompile(`-?\d[\d,]*\.?[\d{2}]*`)
-	numbers := re.FindAllString(testString, -1)
 	var arrayAsIntegers []int
 
-	for _, i := range numbers {
+	for _, i := range param {
 		j, err := strconv.Atoi(i)
 		if err != nil {
 			panic(err)
@@ -76,10 +72,10 @@ func StringSum(input string) (output string, err error) {
 	arrayOfStrings := ReturnNumbersInString(input)
 	arrayOfNumbers := ConvertStringArrayToIntArray(arrayOfStrings)
 
-	if len(arrayOfNumbers) > 2 {
+	if len(arrayOfNumbers) != 2 {
 		return "", fmt.Errorf("too many operands %d: %w", len(arrayOfNumbers), errorNotTwoOperands)
 	}
 
 	sum := CalculateSumOfInts(arrayOfNumbers)
-	return string(rune(sum)), err
+	return strconv.Itoa(sum), err
 }
