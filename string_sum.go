@@ -1,4 +1,4 @@
-package string_sum
+package main
 
 import (
 	"errors"
@@ -14,20 +14,14 @@ var (
 	errorEmptyInput = errors.New("input is empty")
 	// Use when the expression has number of operands not equal to two
 	errorNotTwoOperands = errors.New("expecting two operands, but received more or less")
+	// Use when the input contains letters
+	errorLetterInString = errors.New("Input contains letters")
 )
 
 func ReturnNumbersInString(input string) []string {
 	re := regexp.MustCompile(`-?\d[\d,]*\.?[\d{2}]*`)
 	numbers := re.FindAllString(input, -1)
 	return numbers
-}
-
-func SumOfNumbersInArray(array []int) int {
-	result := 0
-	for _, v := range array {
-		result += v
-	}
-	return result
 }
 
 func ConvertStringArrayToIntArray(param []string) []int {
@@ -69,11 +63,20 @@ func StringSum(input string) (output string, err error) {
 
 	input = strings.ReplaceAll(input, " ", "")
 
+	var isStringAlphabetic = regexp.MustCompile(`^[a-zA-Z]+$`).MatchString
+	if isStringAlphabetic(input) == true {
+		return "", fmt.Errorf("%w", errorLetterInString)
+	}
+
 	arrayOfStrings := ReturnNumbersInString(input)
 	arrayOfNumbers := ConvertStringArrayToIntArray(arrayOfStrings)
 
 	if len(arrayOfNumbers) != 2 {
 		return "", fmt.Errorf("too many operands %d: %w", len(arrayOfNumbers), errorNotTwoOperands)
+	}
+
+	if isStringAlphabetic(input) == true {
+		return "", fmt.Errorf("%w", errorLetterInString)
 	}
 
 	sum := CalculateSumOfInts(arrayOfNumbers)
