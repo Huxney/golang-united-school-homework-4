@@ -81,5 +81,5 @@ func StringSum(input string) (output string, err error) {
 	}
 
 	sum := CalculateSumOfInts(arrayOfNumbers)
-	return string(rune(sum)), nil
+	return string(rune(sum)), err
 }
